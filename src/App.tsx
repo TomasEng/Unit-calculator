@@ -1,7 +1,6 @@
-import React from 'react';
+import React, {useState} from 'react';
 import classes from './App.module.css';
-import * as enheter from 'enheter';
-import {Dimension, Measure, Unit} from 'enheter';
+import {Measure, Unit, allUnits, DimensionName, findDimensionName} from 'enheter';
 import {UnitList} from 'enheter/lib/types/UnitList';
 import {
   Select,
@@ -10,47 +9,28 @@ import {
   TableBody,
   TableCell,
   TableHeader,
-  TableRow,
-  TextField
+  TableRow, TextField,
 } from '@digdir/design-system-react';
 import '@altinn/figma-design-tokens/dist/tokens.css';
 
-const allUnitLists: UnitList[] = Object
-  .values(enheter)
-  .filter((val) => typeof val === 'object' && 'dimension' in val)
-  .map((val) => val as UnitList);
-
-interface ListUnit {
-  dimensionName?: string;
-  dimension: Dimension;
-  unit: Unit;
-}
-
-const allUnits: ListUnit[] = allUnitLists
-  .map((unitList) => Object.values(unitList.units).map((unit) => ({
-    dimensionName: unitList.dimensionName,
-    dimension: unitList.dimension,
-    unit,
-  })))
-  .flat();
-
-const listUnitToOption = (listUnit: ListUnit): SingleSelectOption => {
-  const label = `${listUnit.unit.key} (${listUnit.dimensionName})`;
-  const value = `${listUnit.dimensionName}.${listUnit.unit.key}`;
+const unitToOption = (unit: Unit): SingleSelectOption => {
+  const dimensionName = findDimensionName(unit.dimension);
+  const label = `${unit.key} (${dimensionName})`;
+  const value = `${dimensionName}.${unit.key}`;
   return {
     label,
     value,
-    keywords: [listUnit.unit.key!!, listUnit.dimensionName!!, listUnit.unit.symbol!!],
+    keywords: [unit.key!!, unit.symbol!!],
   };
-};
+}
 
 function App() {
-  const [value, setValue] = React.useState<number>(1);
-  const [unit, setUnit] = React.useState<string>('length.metre');
+  const [value, setValue] = useState<number>(1);
+  const [unit, setUnit] = useState<string>('length.metre');
 
   const currentUnitKey = unit.split('.')[1];
-  const currentDimensionName = unit.split('.')[0];
-  const currentUnitList: UnitList = enheter[currentDimensionName + 'Units' as keyof typeof enheter] as UnitList;
+  const currentDimensionName = unit.split('.')[0] as DimensionName;
+  const currentUnitList: UnitList = allUnits[currentDimensionName];
   const currentUnit: Unit = currentUnitList.units[currentUnitKey]!!;
   const currentMeasure = new Measure(currentUnit, value);
 
@@ -75,7 +55,7 @@ function App() {
           </div>
           <div className={classes.unit}>
             <Select
-              options={allUnits.map(listUnitToOption)}
+              options={Object.values(allUnits).map(d => Object.values(d.units)).flat().map(unitToOption)}
               value={unit}
               onChange={setUnit}
             />
