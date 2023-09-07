@@ -14,13 +14,13 @@ const unitPrefixTexts: {
   mega: 'mega',
   kilo: 'kilo',
   hecto: 'hecto',
-  deca: 'deka',
-  deci: 'desi',
+  deca: 'deca',
+  deci: 'deci',
   centi: 'centi',
   milli: 'milli',
-  micro: 'mikro',
+  micro: 'micro',
   nano: 'nano',
-  pico: 'piko',
+  pico: 'pico',
   femto: 'femto',
   atto: 'atto',
   zepto: 'zepto',
@@ -29,5 +29,5 @@ const unitPrefixTexts: {
   quecto: 'quecto',
 };
 
-export const unitPrefixTextFnNb = (prefix: Prefix): string =>
+export const unitPrefixTextFnEn = (prefix: Prefix): string =>
   prefix === null ? '' : unitPrefixTexts[prefix];

@@ -79,7 +79,7 @@ const unitTexts: UnitKeywords = {
     footPerSecondSquared: ['fot per sekund per sekund', 'fot per sekund per sekund'],
     gal: ['galileo', 'galileo'],
     metrePerSecondSquared: ['meter per sekund per sekund', 'meter per sekund per sekund'],
-    standardGravity: ['standard tyngdekraft', 'standard tyngdekraft'],
+    standardGravity: ['standard tyngdekraft', 'standard tyngdekrefter'],
   },
   charge: {
     coulomb: ['coulomb', 'coulomb'],
@@ -167,7 +167,7 @@ const unitTexts: UnitKeywords = {
   }
 };
 
-export const unitTextFn = <D extends Dimension>(unit: Unit<D>): string => {
+export const unitTextFnNb = <D extends Dimension>(unit: Unit<D>): string => {
   const dimensionName = findDimensionName(unit.dimension);
   const {prefix} = unit;
   const prefixlessUnit = unit.withPrefix(null);
