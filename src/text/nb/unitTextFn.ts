@@ -167,14 +167,15 @@ const unitTexts: UnitKeywords = {
   }
 };
 
-export const unitTextFnNb = <D extends Dimension>(unit: Unit<D>): string => {
+export const unitTextFnNb = <D extends Dimension>(unit: Unit<D>, plural: boolean = false): string => {
   const dimensionName = findDimensionName(unit.dimension);
   const {prefix} = unit;
   const prefixlessUnit = unit.withPrefix(null);
   const prefixlessUnitName = findUnitName(prefixlessUnit);
   if (dimensionName && prefixlessUnitName && prefixlessUnitName in unitTexts[dimensionName]) {
     // @ts-ignore
-    const prefixlessName = unitTexts[dimensionName][prefixlessUnitName][0];
+    const prefixlessNames = unitTexts[dimensionName][prefixlessUnitName];
+    const prefixlessName = plural ? prefixlessNames[1] : prefixlessNames[0];
     return capitalize((prefix || '') + prefixlessName);
   } else return '';
 }
